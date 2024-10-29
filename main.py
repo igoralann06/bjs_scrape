@@ -43,13 +43,14 @@ def get_lists():
                     script_content = script_tag.string
                     decoded_content = urllib.parse.unquote(script_content)
                     json_data = json.loads(decoded_content)
+                    soup = BeautifulSoup(json_data["description"], 'html.parser')
                     record = [
                         str(section_id),
                         base_url,
                         base_url + result["data"]["url"],
                         "BJS",
                         json_data["brand"]["name"],
-                        json_data["description"],
+                        soup.get_text(),
                         json_data["name"],
                         "",
                         "",
