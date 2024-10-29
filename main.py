@@ -21,7 +21,7 @@ def get_lists():
     }
     products = []
     
-    while section_id <= 3:
+    while page <= 3:
         print("page : " + str(page))
         params = {
             "c": "ciojs-client-2.53.1",
