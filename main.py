@@ -24,7 +24,7 @@ def get_lists():
     # with open('index.html', 'w', encoding='utf-8') as file:
     #     file.write(response.text)
     
-    while page <= 3:
+    while page <= 320:
         print("page : " + str(page))
         params = {
             "c": "ciojs-client-2.53.1",
