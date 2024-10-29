@@ -20,6 +20,9 @@ def get_lists():
         'User-Agent': ua.random
     }
     products = []
+    # response = requests.get("https://www.bjs.com/product/wellsley-farms-purified-water-40-pk169-oz/3000000000000427090", headers=headers)
+    # with open('index.html', 'w', encoding='utf-8') as file:
+    #     file.write(response.text)
     
     while page <= 3:
         print("page : " + str(page))
@@ -29,7 +32,7 @@ def get_lists():
             "i": "10b89e05-00d7-4c19-8cd4-8f49913a8cd8",
             "s": 1,
             "page": page,
-            "num_results_per_page": 200,
+            "num_results_per_page": 50,
             "pre_filter_expression": json.dumps({"or":[{"name":"avail_stores","value":"online"},{"name":"avail_stores","value":"0096"},{"and":[{"name":"avail_stores","value":"0096"},{"name":"avail_sdd","value":"0096"}]},{"name":"out_of_stock","value":"Y"}]})
         }
         try:
@@ -45,6 +48,9 @@ def get_lists():
                     decoded_content = urllib.parse.unquote(script_content)
                     json_data = json.loads(decoded_content)
                     soup = BeautifulSoup(json_data["description"], 'html.parser')
+                    product_id = result["data"]["url"].split('/')[-1]
+                    print(product_id)
+                    
                     record = [
                         str(section_id),
                         base_url,
@@ -73,9 +79,6 @@ def get_lists():
                     print(record)
                     section_id = section_id + 1
             length = len(data["response"]["results"])
-            # response = requests.get("https://www.bjs.com/product/berkley-jensen-ultra-dishwashing-liquid-dish-soap-100-oz/3000000000004955305", params=params, headers=headers)
-            # with open('index.html', 'w', encoding='utf-8') as file:
-            #     file.write(response.text)
             
             page = page + 1
         except Exception as e:
