@@ -21,7 +21,8 @@ def get_lists():
     }
     products = []
     
-    while length != 0:
+    while section_id <= 3:
+        print("page : " + str(page))
         params = {
             "c": "ciojs-client-2.53.1",
             "key": "key_2i36vP8QTs3Ati4x",
@@ -69,10 +70,9 @@ def get_lists():
                     ]
                 
                     products.append(record)
-                    section_id = section_id + 1
                     print(record)
+                    section_id = section_id + 1
             length = len(data["response"]["results"])
-            
             # response = requests.get("https://www.bjs.com/product/berkley-jensen-ultra-dishwashing-liquid-dish-soap-100-oz/3000000000004955305", params=params, headers=headers)
             # with open('index.html', 'w', encoding='utf-8') as file:
             #     file.write(response.text)
@@ -100,15 +100,15 @@ if __name__ == '__main__':
     os.mkdir("products/"+current_time)
     os.mkdir("products/"+current_time+"/images")
     
-    records = get_lists()
-    
     workbook = xlwt.Workbook()
     sheet = workbook.add_sheet('Sheet1')
-
+    
     for col_index, value in enumerate(titleData):
         first_col = sheet.col(col_index)
         first_col.width = 256 * widths[col_index]  # 20 characters wide
         sheet.write(0, col_index, value, style)
+    
+    records = get_lists()
         
     for row_index, row in enumerate(records):
         for col_index, value in enumerate(row):
