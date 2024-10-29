@@ -35,11 +35,11 @@ def get_lists():
             "num_results_per_page": 50,
             "pre_filter_expression": json.dumps({"or":[{"name":"avail_stores","value":"online"},{"name":"avail_stores","value":"0096"},{"and":[{"name":"avail_stores","value":"0096"},{"name":"avail_sdd","value":"0096"}]},{"name":"out_of_stock","value":"Y"}]})
         }
-        try:
-            response = requests.get("https://ac.cnstrc.com/browse/group_id/all", params=params, headers=headers)
-            
-            data = response.json()
-            for result in data["response"]["results"]:
+        response = requests.get("https://ac.cnstrc.com/browse/group_id/all", params=params, headers=headers)
+        
+        data = response.json()
+        for result in data["response"]["results"]:
+            try:
                 response = requests.get(base_url + result["data"]["url"], params=params, headers=headers)
                 soup = BeautifulSoup(response.content, 'html.parser')
                 script_tag = soup.find('script', type='application/ld+json')
@@ -78,11 +78,10 @@ def get_lists():
                     products.append(record)
                     print(record)
                     section_id = section_id + 1
-            length = len(data["response"]["results"])
-            
-            page = page + 1
-        except Exception as e:
-            print(e)
+            except Exception as e:
+                print(e)
+        length = len(data["response"]["results"])
+        page = page + 1
     return products
         
     
