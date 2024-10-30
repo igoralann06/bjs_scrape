@@ -13,7 +13,7 @@ section_id = 1
 page = 1
 length = 1
 
-def get_lists():
+def get_lists(current_time, prefix):
     global base_url, length, page, section_id
     ua = UserAgent()
     headers = {
@@ -49,7 +49,22 @@ def get_lists():
                     json_data = json.loads(decoded_content)
                     soup = BeautifulSoup(json_data["description"], 'html.parser')
                     product_id = result["data"]["url"].split('/')[-1]
+                    image_url = json_data.get("image")
+                    download_url = ""
                     print(product_id)
+                    
+                    if(image_url):
+                        try:
+                            responseImage = requests.get(image_url)
+                            image_type = imghdr.what(None, responseImage.content)
+                            if responseImage.status_code == 200:
+                                img_url = "products/"+current_time+"/images/"+prefix+str(section_id)+'.'+image_type
+                                with open(img_url, 'wb') as file:
+                                    file.write(responseImage.content)
+                                    download_url = img_url
+                            # download_url = "products/"+current_time+"/images/"+prefix+str(section_id)+'.'+"jpg"
+                        except Exception as e:
+                            print(e)
                     
                     record = [
                         str(section_id),
@@ -62,13 +77,13 @@ def get_lists():
                         "",
                         "",
                         json_data["offers"][0].get("price", ""),
-                        "",
+                        download_url,
                         json_data["image"],
                         "",
                         "",
                         json_data["aggregateRating"].get("ratingValue", ""),
                         json_data["aggregateRating"].get("reviewCount", ""),
-                        "Westborough, MA",
+                        "Miami,FL",
                         "+1(800)257-2582",
                         "42.2695",
                         "-71.6162",
@@ -110,7 +125,7 @@ if __name__ == '__main__':
         first_col.width = 256 * widths[col_index]  # 20 characters wide
         sheet.write(0, col_index, value, style)
     
-    records = get_lists()
+    records = get_lists(current_time, prefix)
         
     for row_index, row in enumerate(records):
         for col_index, value in enumerate(row):
